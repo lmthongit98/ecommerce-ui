@@ -7,13 +7,12 @@ import {HeaderComponent} from '../header/header.component';
 import {FooterComponent} from '../footer/footer.component';
 import {CommonModule} from '@angular/common';
 import {FormsModule, NgForm} from '@angular/forms';
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {UserResponse} from "../../responses/user/user.response";
 import {Role} from "../../dtos/user/role";
 import {LoginResponse} from "../../responses/user/login.response";
-import {TokenService} from "../../services/token.service";
-import {RoleService} from "../../services/role.service";
-import {CartService} from "../../services/cart.service";
+import {StorageService} from "../../services/storage.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-login',
@@ -30,7 +29,7 @@ import {CartService} from "../../services/cart.service";
 export class LoginComponent implements OnInit {
   @ViewChild('loginForm') loginForm!: NgForm;
 
-  phoneNumber = '0363898571';
+  email = 'lmthong98@gmail.com';
   password = '123456';
   showPassword: boolean = false;
 
@@ -40,16 +39,15 @@ export class LoginComponent implements OnInit {
   userResponse?: UserResponse
 
   onPhoneNumberChange() {
-    console.log(`Phone typed: ${this.phoneNumber}`);
+    console.log(`Phone typed: ${this.email}`);
     //how to validate ? phone must be at least 6 characters
   }
 
   constructor(
     private router: Router,
     private userService: UserService,
-    private tokenService: TokenService,
-    private roleService: RoleService,
-    private cartService: CartService
+    private authService: AuthService,
+    private tokenService: StorageService
   ) {
   }
 
@@ -64,20 +62,19 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    const message = `phone: ${this.phoneNumber}` +
+    const message = `email: ${this.email}` +
       `password: ${this.password}`;
     //alert(message);
     debugger
 
-    const loginDTO: LoginDTO = {
-      phone_number: this.phoneNumber,
-      password: this.password,
-    };
-    this.userService.login(loginDTO).subscribe({
+    const loginDTO = new LoginDTO(this.email, this.password);
+    this.authService.login(loginDTO).subscribe({
       next: (response: LoginResponse) => {
-        const {token} = response;
+        debugger
+        const {token, refreshToken} = response;
         if (this.rememberMe) {
-          this.tokenService.setToken(token);
+          this.tokenService.setAccessToken(token);
+          this.tokenService.setRefreshToken(refreshToken)
           this.userService.getUserDetail().subscribe({
             next: (response: any) => {
               debugger

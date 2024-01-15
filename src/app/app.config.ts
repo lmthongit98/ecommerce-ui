@@ -3,11 +3,11 @@ import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch} from "@angular/common/http";
-import {TokenInterceptor} from "./interceptors/token.interceptor";
+import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
 
 
 const tokenInterceptorProvider: Provider =
-  {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true};
+  {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true};
 
 export const appConfig: ApplicationConfig = {
   providers: [

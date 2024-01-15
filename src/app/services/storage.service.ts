@@ -5,8 +5,10 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 @Injectable({
   providedIn: 'root',
 })
-export class TokenService {
-  private readonly TOKEN_KEY = 'access_token';
+export class StorageService {
+  private readonly ACCESS_TOKEN = 'access_token';
+  private readonly REFRESH_TOKEN = 'refresh_token';
+
   // private jwtHelperService = new JwtHelperService();
   localStorage?:Storage;
 
@@ -14,12 +16,21 @@ export class TokenService {
     this.localStorage = document.defaultView?.localStorage;
   }
   //getter/setter
-  getToken():string {
-    return this.localStorage?.getItem(this.TOKEN_KEY) ?? '';
+  getAccessToken():string {
+    return this.localStorage?.getItem(this.ACCESS_TOKEN) ?? '';
   }
-  setToken(token: string): void {
-    this.localStorage?.setItem(this.TOKEN_KEY, token);
+  setAccessToken(token: string): void {
+    this.localStorage?.setItem(this.ACCESS_TOKEN, token);
   }
+
+  setRefreshToken(token: string) {
+    this.localStorage?.setItem(this.REFRESH_TOKEN, token);
+  }
+
+  getRefreshToken(): string {
+    return this.localStorage?.getItem(this.REFRESH_TOKEN) ?? '';
+  }
+
   // getUserId(): number {
   //   let token = this.getToken();
   //   if (!token) {
@@ -31,8 +42,12 @@ export class TokenService {
 
 
   removeToken(): void {
-    this.localStorage?.removeItem(this.TOKEN_KEY);
+    this.localStorage?.removeItem(this.ACCESS_TOKEN);
   }
+  removeAccessToken(): void {
+    this.localStorage?.removeItem(this.ACCESS_TOKEN);
+  }
+
   // isTokenExpired(): boolean {
   //   if(this.getToken() == null) {
   //     return false;
