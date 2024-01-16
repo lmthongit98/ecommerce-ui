@@ -11,7 +11,7 @@ export const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'products/:id', component: DetailProductComponent},
-  // { path: 'orders', component: OrderComponent,canActivate:[AuthGuardFn] },
+  { path: 'orders', component: OrderComponent}, // todo: add canActivate:[AuthGuardFn]
   // { path: 'user-profile', component: UserProfileComponent, canActivate:[AuthGuardFn] },
   // { path: 'orders/:id', component: OrderDetailComponent },
   {path: 'admin', component: AdminComponent}

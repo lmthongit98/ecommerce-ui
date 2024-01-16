@@ -28,6 +28,12 @@ export class UserService {
     this.localStorage = document.defaultView?.localStorage;
   }
 
+
+  getUserId() {
+    const user = this.getUserResponseFromLocalStorage();
+    return user?.id;
+  }
+
   register(registerDTO: RegisterDTO): Observable<any> {
     return this.http.post(this.apiRegister, registerDTO, this.apiConfig);
   }
