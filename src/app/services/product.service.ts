@@ -22,7 +22,7 @@ export class ProductService {
     limit: number
   ): Observable<Product[]> {
     const params = {
-      keyword: keyword,
+      search_key: keyword,
       category_id: categoryId.toString(),
       page_no: page.toString(),
       page_size: limit.toString()

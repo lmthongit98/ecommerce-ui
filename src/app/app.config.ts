@@ -1,9 +1,10 @@
 import {ApplicationConfig, importProvidersFrom, Provider} from '@angular/core';
-import {provideRouter} from '@angular/router';
+import {provideRouter, RouterModule} from '@angular/router';
 
 import {routes} from './app.routes';
 import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
+import {adminRoutes} from "./components/admin/admin.routes";
 
 
 const tokenInterceptorProvider: Provider =
@@ -15,5 +16,6 @@ export const appConfig: ApplicationConfig = {
     tokenInterceptorProvider,
     provideHttpClient(withFetch()),
     importProvidersFrom(HttpClientModule),
+    importProvidersFrom(RouterModule.forChild(adminRoutes)),
   ],
 };
