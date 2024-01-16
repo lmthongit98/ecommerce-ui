@@ -2,7 +2,6 @@ export class UpdateProductDTO {
   name: string;
   price: number;
   description: string;
-
   categoryId: number;
 
   constructor(data: any) {
