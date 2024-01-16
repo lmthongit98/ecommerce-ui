@@ -74,29 +74,19 @@ export class HomeComponent {
   }
 
   getProducts(keyword: string, selectedCategoryId: number, page: number, limit: number) {
-    debugger;
     this.productService.getProducts(keyword, selectedCategoryId, page, limit).subscribe({
       next: (response: any) => {
-        debugger;
-        // response.products.forEach((product: Product) => {
-        //   product.url = `${environment.apiBaseUrl}/products/images/${product.thumbnail}`;
-        // });
         this.products = response.content;
         this.totalPages = response.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
-      complete: () => {
-        debugger;
-      },
       error: (error: any) => {
-        debugger;
         console.error('Error fetching products:', error);
       }
     });
   }
 
   onPageChange(page: number) {
-    debugger;
     this.currentPage = page < 0 ? 0 : page;
     this.localStorage?.setItem('currentProductPage', String(this.currentPage));
     this.getProducts(this.keyword, this.selectedCategoryId, this.currentPage, this.itemsPerPage);
