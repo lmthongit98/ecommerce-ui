@@ -5,6 +5,7 @@ import {RegisterComponent} from "./components/register/register.component";
 import {OrderComponent} from "./components/order/order.component";
 import {DetailProductComponent} from "./components/product-detail/product-detail.component";
 import {AdminComponent} from "./components/admin/admin.component";
+import {OrderDetailComponent} from "./components/order-detail/order-detail.component";
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -13,6 +14,6 @@ export const routes: Routes = [
   {path: 'products/:id', component: DetailProductComponent},
   { path: 'orders', component: OrderComponent}, // todo: add canActivate:[AuthGuardFn]
   // { path: 'user-profile', component: UserProfileComponent, canActivate:[AuthGuardFn] },
-  // { path: 'orders/:id', component: OrderDetailComponent },
+  { path: 'orders/:id', component: OrderDetailComponent },
   {path: 'admin', component: AdminComponent}
 ];
