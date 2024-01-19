@@ -13,7 +13,7 @@ import { OrderResponse } from '../responses/order/order.response';
 })
 export class OrderService {
   private apiUrl = `${environment.apiBaseUrl}/orders`;
-  private apiGetAllOrders = `${environment.apiBaseUrl}/orders/get-orders-by-keyword`;
+  private apiGetAllOrders = `${environment.apiBaseUrl}/orders`;
 
   constructor(private http: HttpClient) {}
 
@@ -29,9 +29,9 @@ export class OrderService {
                page: number, limit: number
   ): Observable<OrderResponse[]> {
     const params = new HttpParams()
-      .set('keyword', keyword)
-      .set('page', page.toString())
-      .set('limit', limit.toString());
+      // .set('search_key', keyword)
+      .set('page_no', page)
+      .set('page_size', limit);
     return this.http.get<any>(this.apiGetAllOrders, { params });
   }
   updateOrder(orderId: number, orderData: OrderDTO): Observable<Object> {
