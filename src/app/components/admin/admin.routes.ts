@@ -5,6 +5,9 @@ import {ProductAddComponent} from "./product/product-add/product-add.component";
 import {ProductUpdateComponent} from "./product/product-update/product-update.component";
 import {OrderAdminComponent} from "./order/order.admin.component";
 import {OrderDetailAdminComponent} from "./order-detail/order-detail-admin.component";
+import {CategoryAdminComponent} from "./category/category-admin.component";
+import {CategoryUpdateComponent} from "./category/update/category-update.component";
+import {CategoryCreateComponent} from "./category/create/category-create.component";
 
 export const adminRoutes: Routes = [
   {
@@ -30,6 +33,18 @@ export const adminRoutes: Routes = [
       {
         path: 'products/update/:id',
         component: ProductUpdateComponent
+      },
+      {
+        path: 'categories',
+        component: CategoryAdminComponent
+      },
+      {
+        path: 'categories/update/:id',
+        component: CategoryUpdateComponent
+      },
+      {
+        path: 'categories/create',
+        component: CategoryCreateComponent
       },
     ]
   }
