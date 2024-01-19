@@ -29,7 +29,7 @@ export class OrderService {
                page: number, limit: number
   ): Observable<OrderResponse[]> {
     const params = new HttpParams()
-      // .set('search_key', keyword)
+      .set('search_key', keyword)
       .set('page_no', page)
       .set('page_size', limit);
     return this.http.get<any>(this.apiGetAllOrders, { params });

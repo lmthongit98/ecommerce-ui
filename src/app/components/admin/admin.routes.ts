@@ -4,6 +4,7 @@ import {ProductAdminComponent} from "./product/product-admin.component";
 import {ProductAddComponent} from "./product/product-add/product-add.component";
 import {ProductUpdateComponent} from "./product/product-update/product-update.component";
 import {OrderAdminComponent} from "./order/order.admin.component";
+import {OrderDetailAdminComponent} from "./order-detail/order-detail-admin.component";
 
 export const adminRoutes: Routes = [
   {
@@ -13,6 +14,10 @@ export const adminRoutes: Routes = [
       {
         path: 'orders',
         component: OrderAdminComponent
+      },
+      {
+        path: 'orders/:id',
+        component: OrderDetailAdminComponent
       },
       {
         path: 'products',
