@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
         if (this.rememberMe) {
           this.tokenService.setAccessToken(token);
           this.tokenService.setRefreshToken(refreshToken)
-          this.userService.getUserDetail().subscribe({
+          this.userService.getUserProfile().subscribe({
             next: (response: any) => {
               debugger
               this.userResponse = {

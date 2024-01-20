@@ -13,7 +13,7 @@ import {HttpUtilService} from "./http.util.service";
 })
 export class UserService {
   private apiRegister = `${environment.apiBaseUrl}/users/register`;
-  private apiUserDetail = `${environment.apiBaseUrl}/users/details`;
+  private apiUserProfile = `${environment.apiBaseUrl}/users/profile`;
   localStorage?: Storage;
 
   private apiConfig = {
@@ -38,14 +38,12 @@ export class UserService {
     return this.http.post(this.apiRegister, registerDTO, this.apiConfig);
   }
 
-  getUserDetail() {
-    return this.http.get(this.apiUserDetail)
+  getUserProfile() {
+    return this.http.get(this.apiUserProfile)
   }
 
-  updateUserDetail(token: string, updateUserDTO: UpdateUserDTO) {
-    debugger
-    let userResponse = this.getUserResponseFromLocalStorage();
-    return this.http.put(`${this.apiUserDetail}/${userResponse?.id}`, updateUserDTO)
+  updateUserProfile(updateUserDTO: UpdateUserDTO) {
+    return this.http.put(`${this.apiUserProfile}`, updateUserDTO)
   }
 
   saveUserResponseToLocalStorage(userResponse?: UserResponse) {
