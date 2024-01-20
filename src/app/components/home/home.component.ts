@@ -6,10 +6,10 @@ import {Router} from "@angular/router";
 import {Product} from "../../models/product";
 import {Category} from "../../models/category";
 import {ProductService} from "../../services/product.service";
-import {environment} from "../../../environments/environment";
 import {CategoryService} from "../../services/category.service";
 import {FormsModule} from "@angular/forms";
 import {CartService} from "../../services/cart.service";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-home',
@@ -41,6 +41,7 @@ export class HomeComponent {
     private categoryService: CategoryService,
     private cartService: CartService,
     private router: Router,
+    private toastr: ToastrService,
     // private tokenService: TokenService,
     @Inject(DOCUMENT) private document: Document
   ) {
@@ -119,5 +120,6 @@ export class HomeComponent {
 
   addToCart(productId: number) {
     this.cartService.addToCart(productId, 1);
+    this.toastr.success('Thêm sản phẩm vào giỏ hàng thành công!', 'Thông báo!', {timeOut: 1000});
   }
 }

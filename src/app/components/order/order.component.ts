@@ -28,6 +28,7 @@ import {
 } from "ngx-stripe";
 import {switchMap} from "rxjs";
 import {PaymentIntentDto} from "../../dtos/order/payment.intent.dto";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-order',
@@ -53,6 +54,7 @@ export class OrderComponent implements OnInit {
   private orderService = inject(OrderService);
   private userService = inject(UserService);
   private formBuilder = inject(FormBuilder);
+  private toastr = inject(ToastrService);
   private router = inject(Router);
 
   orderForm: FormGroup;
@@ -206,7 +208,7 @@ export class OrderComponent implements OnInit {
   private placeOrder() {
     this.orderService.placeOrder(this.orderData).subscribe({
       next: (response: Order) => {
-        alert('Đặt hàng thành công');
+        this.toastr.success('Đặt hàng thành công', 'Thông báo!');
         this.cartService.clearCart();
         this.router.navigate(['/']);
       },
@@ -214,7 +216,7 @@ export class OrderComponent implements OnInit {
         this.calculateTotal();
       },
       error: (error: any) => {
-        alert(`Lỗi khi đặt hàng: ${error}`);
+        this.toastr.success('Lỗi khi đặt hàng: ' + error, 'Thông báo!');
       },
     });
   }

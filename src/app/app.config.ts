@@ -7,6 +7,8 @@ import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
 import {adminRoutes} from "./components/admin/admin.routes";
 import {provideNgxStripe} from "ngx-stripe";
 import {environment} from "../environments/environment";
+import {provideToastr} from "ngx-toastr";
+import {provideAnimations} from "@angular/platform-browser/animations";
 
 
 const tokenInterceptorProvider: Provider =
@@ -19,6 +21,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     importProvidersFrom(HttpClientModule),
     importProvidersFrom(RouterModule.forChild(adminRoutes)),
-    provideNgxStripe(environment.stripe.publicKey)
+    provideNgxStripe(environment.stripe.publicKey),
+    provideAnimations(),
+    provideToastr(),
   ],
 };

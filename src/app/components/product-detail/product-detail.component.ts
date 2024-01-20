@@ -3,11 +3,10 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {Product} from '../../models/product';
 import {ProductService} from '../../services/product.service';
 import {CartService} from '../../services/cart.service';
-import {environment} from '../../../environments/environment';
-import {ProductImage} from '../../models/product.image';
 import {HeaderComponent} from '../header/header.component';
 import {FooterComponent} from '../footer/footer.component';
 import {CommonModule} from '@angular/common';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-detail-product',
@@ -33,6 +32,7 @@ export class DetailProductComponent implements OnInit {
     private cartService: CartService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private toastr: ToastrService
   ) {
 
   }
@@ -101,10 +101,10 @@ export class DetailProductComponent implements OnInit {
     debugger
     this.isPressedAddToCart = true;
     if (this.product) {
+      this.toastr.success('Thêm sản phẩm vào giỏ hàng thành công!', 'Thông báo!', {timeOut: 1000});
       this.cartService.addToCart(this.product.id, this.quantity);
     } else {
-      // Xử lý khi product là null
-      console.error('Không thể thêm sản phẩm vào giỏ hàng vì product là null.');
+      this.toastr.error('Thất bại!', 'Thông báo!');
     }
   }
 
