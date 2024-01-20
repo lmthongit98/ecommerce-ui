@@ -1,7 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {HeaderComponent} from "../header/header.component";
 import {FooterComponent} from "../footer/footer.component";
-import {DOCUMENT, NgClass} from "@angular/common";
+import {CurrencyPipe, DOCUMENT, NgClass} from "@angular/common";
 import {Router} from "@angular/router";
 import {Product} from "../../models/product";
 import {Category} from "../../models/category";
@@ -9,6 +9,7 @@ import {ProductService} from "../../services/product.service";
 import {environment} from "../../../environments/environment";
 import {CategoryService} from "../../services/category.service";
 import {FormsModule} from "@angular/forms";
+import {CartService} from "../../services/cart.service";
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ import {FormsModule} from "@angular/forms";
     HeaderComponent,
     FooterComponent,
     FormsModule,
-    NgClass
+    NgClass,
+    CurrencyPipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -37,6 +39,7 @@ export class HomeComponent {
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
+    private cartService: CartService,
     private router: Router,
     // private tokenService: TokenService,
     @Inject(DOCUMENT) private document: Document
@@ -112,5 +115,9 @@ export class HomeComponent {
     debugger;
     // Điều hướng đến trang detail-product với productId là tham số
     this.router.navigate(['/products', productId]);
+  }
+
+  addToCart(productId: number) {
+    this.cartService.addToCart(productId, 1);
   }
 }
