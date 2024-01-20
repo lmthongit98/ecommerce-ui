@@ -1,5 +1,6 @@
 import {Injectable, Inject} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,21 @@ import {DOCUMENT} from '@angular/common';
 export class CartService {
   private cart: Map<number, number> = new Map<number, number>(); // Dùng Map để lưu trữ giỏ hàng, key là id sản phẩm, value là số lượng
   localStorage?: Storage;
+
+  private itemCount = new BehaviorSubject<number>(0);
+  itemCount$ = this.itemCount.asObservable();
+
+  updateItemCount() {
+    this.itemCount.next(this.getItemCount());
+  }
+
+  getItemCount() {
+    let totalCount = 0;
+    for (const quantity of this.cart.values()) {
+      totalCount += quantity;
+    }
+    return totalCount;
+  }
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     this.localStorage = document.defaultView?.localStorage;
@@ -22,6 +38,7 @@ export class CartService {
     } else {
       this.cart = new Map<number, number>();
     }
+    this.updateItemCount()
   }
 
   private getCartKey(): string {
@@ -51,7 +68,7 @@ export class CartService {
 
   // Lưu trữ giỏ hàng vào localStorage
   private saveCartToLocalStorage(): void {
-    debugger
+    this.updateItemCount()
     this.localStorage?.setItem(this.getCartKey(), JSON.stringify(Array.from(this.cart.entries())));
   }
 

@@ -30,7 +30,9 @@
                [ngClass]="{ 'active': activeNavItem === 2 }"
                (click)="setActiveNavItem(2)"
                routerLink="/orders">
-              <i class="fas fa-shopping-cart icon"></i>
+              <i class="fas fa-shopping-cart icon">
+                <span class="badge badge-light">{{itemCount}}</span>
+              </i>
               Giỏ hàng
             </a>
           </li>

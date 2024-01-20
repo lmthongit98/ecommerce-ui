@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import {StorageService} from "../../services/storage.service";
+import {CartService} from "../../services/cart.service";
 
 @Component({
   selector: 'app-header',
@@ -23,16 +24,22 @@ export class HeaderComponent implements OnInit{
   userResponse?:UserResponse | null;
   isPopoverOpen = false;
   activeNavItem: number = 0;
+  itemCount = 0;
+
 
   constructor(
     private userService: UserService,
     private storageService: StorageService,
     private router: Router,
+    private cartService: CartService
   ) {
 
   }
   ngOnInit() {
     this.userResponse = this.userService.getUserResponseFromLocalStorage();
+    this.cartService.itemCount$.subscribe(count => {
+      this.itemCount = count;
+    });
   }
 
   togglePopover(event: Event): void {
