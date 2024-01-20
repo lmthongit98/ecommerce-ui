@@ -4,7 +4,8 @@
     <h1>Đây là trang Order</h1>
     <p>Sử dụng Bootstrap</p>
   </div>
-  <form [formGroup]="orderForm"> <!-- Thêm form và gán formGroup -->
+  <form ngxStripeCardGroup [elementsOptions]="elementsOptions" [formGroup]="orderForm">
+    <!-- Thêm form và gán formGroup -->
     <div class="row">
       <div class="col-md-5">
         <h2 class="product-header">Thông tin người nhận</h2>
@@ -12,11 +13,11 @@
           <label for="fullname" class="form-label">Họ và tên</label>
           <input type="text"
                  formControlName="fullname"
+                 placeholder="Họ tên"
                  class="form-control"
                  id="fullname"
                  [class.is-invalid]="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched">
-          @if (orderForm.get('fullname')!.invalid &&
-          orderForm.get('fullname')!.touched) {
+          @if (orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched) {
             <div class="invalid-feedback">
               Họ và tên là trường bắt buộc.
             </div>
@@ -25,12 +26,12 @@
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input type="text"
+                 placeholder="Email"
                  formControlName="email"
                  class="form-control"
                  id="email"
                  [class.is-invalid]="orderForm.get('email')!.invalid && orderForm.get('email')!.touched">
-          @if (orderForm.get('email')!.invalid
-          && orderForm.get('email')!.touched) {
+          @if (orderForm.get('email')!.invalid && orderForm.get('email')!.touched) {
             <div
               class="invalid-feedback">
               {{ orderForm.get('email')!.hasError('email') ? 'Email không hợp lệ' : 'Email là trường bắt buộc' }}
@@ -48,8 +49,7 @@
                  required
                  id="phone"
                  [class.is-invalid]="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched">
-          @if (orderForm.get('phone_number')!.invalid
-          && orderForm.get('phone_number')!.touched) {
+          @if (orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched) {
             <div class="invalid-feedback">
               Số điện thoại là trường bắt buộc và ít nhất 6 ký tự.
             </div>
@@ -64,8 +64,7 @@
                  required
                  id="address"
                  [class.is-invalid]="orderForm.get('address')!.invalid && orderForm.get('address')!.touched">
-          @if (orderForm.get('address')!.invalid
-          && orderForm.get('address')!.touched) {
+          @if (orderForm.get('address')!.invalid && orderForm.get('address')!.touched) {
             <div class="invalid-feedback">
               Địa chỉ là trường bắt buộc và ít nhất 5 ký tự.
             </div>
@@ -83,20 +82,37 @@
         </div>
         <div class="mb-3">
           <label for="shippingMethod">Phương thức vận chuyển</label>
-          <select class="form-control" id="shippingMethod"
-                  formControlName="shipping_method">
+          <select class="form-control" id="shippingMethod" formControlName="shipping_method">
             <option value="express">Nhanh (Express)</option>
             <option value="normal">Thường (Normal)</option>
           </select>
         </div>
         <div class="mb-3">
           <label for="paymentMethod">Phương thức thanh toán</label>
-          <select class="form-control" id="paymentMethod"
-                  formControlName="payment_method">
+          <select class="form-control" id="paymentMethod" formControlName="payment_method">
             <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-            <option value="other">Thanh toán khác</option>
+            <option value="credit_card">Credit card</option>
           </select>
         </div>
+        <div class="mb-3">
+          <label for="note" class="form-label">Card Number</label>
+          <div class="p-2 stripeInput">
+            <ngx-stripe-card-number [options]="cardOptions"></ngx-stripe-card-number>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="note" class="form-label">Card expiry</label>
+          <div class="p-2 stripeInput">
+            <ngx-stripe-card-expiry [options]="cardOptions"></ngx-stripe-card-expiry>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="note" class="form-label">Card CVC</label>
+          <div class="p-2 stripeInput">
+            <ngx-stripe-card-cvc [options]="cardOptions"></ngx-stripe-card-cvc>
+          </div>
+        </div>
+
         <!-- </form> -->
       </div>
       <div class="col-md-7">
@@ -154,7 +170,7 @@
         }
         <div class="text-start mt-3">
           <button
-            (click)="placeOrder()"
+            (click)="handleOrderSubmit()"
             class="btn btn-gradient" type="button">Đặt hàng
           </button>
         </div>
@@ -162,4 +178,5 @@
     </div>
   </form>
 </div>
+
 <app-footer></app-footer>

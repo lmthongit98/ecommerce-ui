@@ -1,9 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal, ViewChild} from '@angular/core';
 import {Product} from '../../models/product';
 import {CartService} from '../../services/cart.service';
 import {ProductService} from '../../services/product.service';
 import {OrderService} from '../../services/order.service';
-import {environment} from '../../../environments/environment';
+import {
+  StripeCardElementOptions,
+  StripeElementsOptions,
+} from '@stripe/stripe-js';
 import {OrderDTO} from '../../dtos/order/order.dto';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
@@ -16,6 +19,15 @@ import {inject} from '@angular/core';
 import {CouponService} from '../../services/coupon.service';
 import {UserService} from "../../services/user.service";
 import {Order} from "../../models/order";
+import {
+  StripeCardCvcComponent,
+  StripeCardExpiryComponent,
+  StripeCardGroupDirective,
+  StripeCardNumberComponent,
+  StripeService
+} from "ngx-stripe";
+import {switchMap} from "rxjs";
+import {PaymentIntentDto} from "../../dtos/order/payment.intent.dto";
 
 @Component({
   selector: 'app-order',
@@ -28,6 +40,10 @@ import {Order} from "../../models/order";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    StripeCardCvcComponent,
+    StripeCardExpiryComponent,
+    StripeCardNumberComponent,
+    StripeCardGroupDirective,
   ]
 })
 export class OrderComponent implements OnInit {
@@ -39,34 +55,33 @@ export class OrderComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
 
-  orderForm: FormGroup; // Đối tượng FormGroup để quản lý dữ liệu của form
+  orderForm: FormGroup;
   cartItems: { product: Product, quantity: number }[] = [];
-  totalAmount: number = 0; // Tổng tiền
-  couponDiscount: number = 0; //số tiền được discount từ coupon
-  couponApplied: boolean = false;
+  totalAmount = 0;
+  couponDiscount = 0;
+  couponApplied = false;
   cart: Map<number, number> = new Map();
   orderData: OrderDTO = {
-    user_id: 0, // Thay bằng user_id thích hợp
-    fullname: '', // Khởi tạo rỗng, sẽ được điền từ form
-    email: '', // Khởi tạo rỗng, sẽ được điền từ form
-    phone_number: '', // Khởi tạo rỗng, sẽ được điền từ form
-    address: '', // Khởi tạo rỗng, sẽ được điền từ form
+    user_id: 0,
+    fullname: '',
+    email: '',
+    phone_number: '',
+    address: '',
     status: 'PENDING',
-    note: '', // Có thể thêm trường ghi chú nếu cần
-    total_money: 0, // Sẽ được tính toán dựa trên giỏ hàng và mã giảm giá
-    payment_method: 'cod', // Mặc định là thanh toán khi nhận hàng (COD)
-    shipping_method: 'express', // Mặc định là vận chuyển nhanh (Express)
-    coupon_code: '', // Sẽ được điền từ form khi áp dụng mã giảm giá
+    note: '',
+    total_money: 0,
+    payment_method: 'cod',
+    shipping_method: 'express',
+    coupon_code: '',
     cart_items: []
   };
 
-  constructor() {
-    // Tạo FormGroup và các FormControl tương ứng
+  constructor(private stripeService: StripeService) {
     this.orderForm = this.formBuilder.group({
-      fullname: ['', Validators.required], // fullname là FormControl bắt buộc
-      email: ['', [Validators.email]], // Sử dụng Validators.email cho kiểm tra định dạng email
-      phone_number: ['', [Validators.required, Validators.minLength(6)]], // phone_number bắt buộc và ít nhất 6 ký tự
-      address: ['', [Validators.required, Validators.minLength(5)]], // address bắt buộc và ít nhất 5 ký tự
+      fullname: ['', Validators.required],
+      email: ['', [Validators.email, Validators.required]],
+      phone_number: ['', [Validators.required, Validators.minLength(6)]],
+      address: ['', [Validators.required, Validators.minLength(5)]],
       note: [''],
       couponCode: [''],
       shipping_method: ['express'],
@@ -74,26 +89,45 @@ export class OrderComponent implements OnInit {
     });
   }
 
+  @ViewChild(StripeCardNumberComponent) card!: StripeCardNumberComponent;
+
+  cardOptions: StripeCardElementOptions = {
+    style: {
+      base: {
+        iconColor: '#666EE8',
+        backgroundColor: 'rgb(19, 23, 42)',
+        color: 'white',
+        fontWeight: '400',
+        lineHeight: '1.5',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        padding: '.375rem .75rem',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#817d7d',
+        },
+      },
+    },
+  };
+
+  elementsOptions: StripeElementsOptions = {
+    locale: 'es',
+  };
+
+
   ngOnInit(): void {
-    debugger
     //this.cartService.clearCart();
     this.orderData.user_id = this.userService.getUserId() ?? 0;
-    // Lấy danh sách sản phẩm từ giỏ hàng
-    debugger
     this.cart = this.cartService.getCart();
     const productIds = Array.from(this.cart.keys()); // Chuyển danh sách ID từ Map giỏ hàng
 
     // Gọi service để lấy thông tin sản phẩm dựa trên danh sách ID
-    debugger
     if (productIds.length === 0) {
       return;
     }
     this.productService.getProductsByIds(productIds).subscribe({
       next: (products) => {
-        debugger
         // Lấy thông tin sản phẩm và số lượng từ danh sách sản phẩm và giỏ hàng
         this.cartItems = productIds.map((productId) => {
-          debugger
           const product = products.find((p) => p.id === productId);
           return {
             product: product!,
@@ -102,60 +136,87 @@ export class OrderComponent implements OnInit {
         });
       },
       complete: () => {
-        debugger;
         this.calculateTotal()
       },
       error: (error: any) => {
-        debugger;
         console.error('Error fetching detail:', error);
       }
     });
   }
 
-  placeOrder() {
-    debugger
-    if (this.orderForm.errors == null) {
-      // Gán giá trị từ form vào đối tượng orderData
-      /*
-      this.orderData.fullname = this.orderForm.get('fullname')!.value;
-      this.orderData.email = this.orderForm.get('email')!.value;
-      this.orderData.phone_number = this.orderForm.get('phone_number')!.value;
-      this.orderData.address = this.orderForm.get('address')!.value;
-      this.orderData.note = this.orderForm.get('note')!.value;
-      this.orderData.shipping_method = this.orderForm.get('shipping_method')!.value;
-      this.orderData.payment_method = this.orderForm.get('payment_method')!.value;
-      */
-      // Sử dụng toán tử spread (...) để sao chép giá trị từ form vào orderData
-      this.orderData = {
-        ...this.orderData,
-        ...this.orderForm.value
-      };
-      this.orderData.cart_items = this.cartItems.map(cartItem => ({
-        product_id: cartItem.product.id,
-        quantity: cartItem.quantity
-      }));
-      this.orderData.total_money = this.totalAmount;
-      // Dữ liệu hợp lệ, bạn có thể gửi đơn hàng đi
-      this.orderService.placeOrder(this.orderData).subscribe({
-        next: (response: Order) => {
-          debugger;
-          alert('Đặt hàng thành công');
-          this.cartService.clearCart();
-          this.router.navigate(['/']);
-        },
-        complete: () => {
-          debugger;
-          this.calculateTotal();
-        },
-        error: (error: any) => {
-          debugger;
-          alert(`Lỗi khi đặt hàng: ${error}`);
-        },
-      });
-    } else {
-      // Hiển thị thông báo lỗi hoặc xử lý khác
+  handleOrderSubmit() {
+    if (this.orderForm.errors != null) {
       alert('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
+      return;
     }
+    this.orderData = {
+      ...this.orderData,
+      ...this.orderForm.value
+    };
+    this.orderData.cart_items = this.cartItems.map(cartItem => ({
+      product_id: cartItem.product.id,
+      quantity: cartItem.quantity
+    }));
+    this.orderData.total_money = this.totalAmount;
+    switch (this.orderData.payment_method) {
+      case 'credit_card':
+        this.placeOrderWithCreditCard();
+        break;
+      case 'cod':
+        this.placeOrder();
+        break;
+      default:
+        throw new Error("Payment method is not valid!");
+    }
+  }
+
+  private placeOrderWithCreditCard() {
+    const paymentIntentDto: PaymentIntentDto = {
+      amount: this.totalAmount,
+      currency: 'USD',
+      receiptEmail: this.orderData.email
+    }
+    this.orderService.createPaymentIntent(paymentIntentDto)
+      .pipe(
+        switchMap((pi) => {
+            return this.stripeService.confirmCardPayment(pi.client_secret, {
+              payment_method: {
+                card: this.card.element,
+                billing_details: {
+                  name: this.orderData.fullname,
+                },
+              },
+            })
+          }
+        )
+      )
+      .subscribe((result) => {
+        if (result.error) {
+          // Show error to your customer (e.g., insufficient funds)
+          console.log(result.error.message);
+        } else {
+          // The payment has been processed!
+          if (result.paymentIntent.status === 'succeeded') {
+            this.placeOrder()
+          }
+        }
+      });
+  }
+
+  private placeOrder() {
+    this.orderService.placeOrder(this.orderData).subscribe({
+      next: (response: Order) => {
+        alert('Đặt hàng thành công');
+        this.cartService.clearCart();
+        this.router.navigate(['/']);
+      },
+      complete: () => {
+        this.calculateTotal();
+      },
+      error: (error: any) => {
+        alert(`Lỗi khi đặt hàng: ${error}`);
+      },
+    });
   }
 
   decreaseQuantity(index: number): void {
@@ -176,10 +237,7 @@ export class OrderComponent implements OnInit {
 
   // Hàm tính tổng tiền
   calculateTotal(): void {
-    this.totalAmount = this.cartItems.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
-    );
+    this.totalAmount = this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
   }
 
   confirmDelete(index: number): void {

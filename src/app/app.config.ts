@@ -5,6 +5,8 @@ import {routes} from './app.routes';
 import {HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch} from "@angular/common/http";
 import {AuthInterceptor} from "./interceptors/auth-interceptor.service";
 import {adminRoutes} from "./components/admin/admin.routes";
+import {provideNgxStripe} from "ngx-stripe";
+import {environment} from "../environments/environment";
 
 
 const tokenInterceptorProvider: Provider =
@@ -17,5 +19,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     importProvidersFrom(HttpClientModule),
     importProvidersFrom(RouterModule.forChild(adminRoutes)),
+    provideNgxStripe(environment.stripe.publicKey)
   ],
 };

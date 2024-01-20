@@ -17,6 +17,10 @@
   color: white;
 }
 
+.form-control::placeholder {
+  color: #817d7d;
+}
+
 .form-control:focus {
   border-color: white;
   background-color: $shopapp-background-color;
@@ -101,4 +105,8 @@ td {
 
 .product-quantity input:focus {
   outline: none;
+}
+
+.stripeInput {
+  background-color: rgb(19, 23, 42);
 }
