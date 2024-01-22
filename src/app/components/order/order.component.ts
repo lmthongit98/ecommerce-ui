@@ -29,6 +29,8 @@ import {
 import {switchMap} from "rxjs";
 import {PaymentIntentDto} from "../../dtos/order/payment.intent.dto";
 import {ToastrService} from "ngx-toastr";
+import {CouponApplyDto} from "../../dtos/coupon/coupon.apply.dto";
+import {CartItemDTO} from "../../dtos/order/cart.item.dto";
 
 @Component({
   selector: 'app-order',
@@ -61,6 +63,7 @@ export class OrderComponent implements OnInit {
   cartItems: { product: Product, quantity: number }[] = [];
   totalAmount = 0;
   couponDiscount = 0;
+  couponError = '';
   couponApplied = false;
   cart: Map<number, number> = new Map();
   orderData: OrderDTO = {
@@ -117,18 +120,15 @@ export class OrderComponent implements OnInit {
 
 
   ngOnInit(): void {
-    //this.cartService.clearCart();
     this.orderData.user_id = this.userService.getUserId() ?? 0;
     this.cart = this.cartService.getCart();
     const productIds = Array.from(this.cart.keys()); // Chuyển danh sách ID từ Map giỏ hàng
 
-    // Gọi service để lấy thông tin sản phẩm dựa trên danh sách ID
     if (productIds.length === 0) {
       return;
     }
     this.productService.getProductsByIds(productIds).subscribe({
       next: (products) => {
-        // Lấy thông tin sản phẩm và số lượng từ danh sách sản phẩm và giỏ hàng
         this.cartItems = productIds.map((productId) => {
           const product = products.find((p) => p.id === productId);
           return {
@@ -224,46 +224,59 @@ export class OrderComponent implements OnInit {
   decreaseQuantity(index: number): void {
     if (this.cartItems[index].quantity > 1) {
       this.cartItems[index].quantity--;
-      // Cập nhật lại this.cart từ this.cartItems
       this.updateCartFromCartItems();
       this.calculateTotal();
+      this.resetCoupon();
     }
   }
 
   increaseQuantity(index: number): void {
     this.cartItems[index].quantity++;
-    // Cập nhật lại this.cart từ this.cartItems
     this.updateCartFromCartItems();
     this.calculateTotal();
+    this.resetCoupon();
   }
 
-  // Hàm tính tổng tiền
   calculateTotal(): void {
     this.totalAmount = this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
   }
 
   confirmDelete(index: number): void {
     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-      // Xóa sản phẩm khỏi danh sách cartItems
       this.cartItems.splice(index, 1);
-      // Cập nhật lại this.cart từ this.cartItems
       this.updateCartFromCartItems();
-      // Tính toán lại tổng tiền
       this.calculateTotal();
+      this.resetCoupon();
     }
   }
 
-  // Hàm xử lý việc áp dụng mã giảm giá
   applyCoupon(): void {
-    debugger
     const couponCode = this.orderForm.get('couponCode')!.value;
     if (!this.couponApplied && couponCode) {
+      const carItems: CartItemDTO[] = [];
+      this.cart.forEach((value, key) => {
+        carItems.push({
+          product_id: key,
+          quantity: value
+        })
+      })
       this.calculateTotal();
-      this.couponService.calculateCouponValue(couponCode, this.totalAmount)
+      const couponApplyDto: CouponApplyDto = {
+        totalAmount: this.totalAmount,
+        couponCode: couponCode,
+        cartItems: carItems
+      }
+      this.couponService.calculateCouponValue(couponApplyDto)
         .subscribe({
-          next: (response) => {
-            this.totalAmount = response;
+          next: ({discountAmount}) => {
+            debugger
+            this.couponDiscount = this.totalAmount - discountAmount;
+            this.totalAmount = discountAmount;
             this.couponApplied = true;
+            this.couponError = '';
+          }, error: (err) => {
+            this.couponError = err.error.description;
+            console.log(err)
           }
         });
     }
@@ -275,5 +288,11 @@ export class OrderComponent implements OnInit {
       this.cart.set(item.product.id, item.quantity);
     });
     this.cartService.setCart(this.cart);
+  }
+
+  private resetCoupon() {
+    this.couponDiscount = 0;
+    this.couponApplied = false;
+    this.couponError = '';
   }
 }

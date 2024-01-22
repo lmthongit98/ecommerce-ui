@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import {CouponApplyDto} from "../dtos/coupon/coupon.apply.dto";
 
 
 @Injectable({
@@ -12,13 +13,9 @@ export class CouponService {
   private apiBaseUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) { }
-  calculateCouponValue(couponCode: string, totalAmount: number): Observable<number> {
-    const url = `${this.apiBaseUrl}/coupons/calculate`;
-    const params = new HttpParams()
-      .set('couponCode', couponCode)
-      .set('totalAmount', totalAmount.toString());
-
-    return this.http.get<number>(url, { params });
+  calculateCouponValue(couponApplyDto: CouponApplyDto): Observable<any> {
+    const url = `${this.apiBaseUrl}/coupons/apply`;
+    return this.http.post<number>(url, couponApplyDto);
   }
 
 }
