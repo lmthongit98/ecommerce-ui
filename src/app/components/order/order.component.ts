@@ -216,7 +216,7 @@ export class OrderComponent implements OnInit {
         this.calculateTotal();
       },
       error: (error: any) => {
-        this.toastr.success('Lỗi khi đặt hàng: ' + error, 'Thông báo!');
+        this.toastr.error(error.error.description, 'Lỗi đặt hàng!');
       },
     });
   }

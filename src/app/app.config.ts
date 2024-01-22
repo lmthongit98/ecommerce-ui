@@ -23,6 +23,10 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(RouterModule.forChild(adminRoutes)),
     provideNgxStripe(environment.stripe.publicKey),
     provideAnimations(),
-    provideToastr(),
+    provideToastr({
+      timeOut: 10000,
+      positionClass:  'toast-top-right',
+      preventDuplicates: true,
+    }),
   ],
 };
