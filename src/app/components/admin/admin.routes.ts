@@ -8,6 +8,9 @@ import {OrderDetailAdminComponent} from "./order-detail/order-detail-admin.compo
 import {CategoryAdminComponent} from "./category/category-admin.component";
 import {CategoryUpdateComponent} from "./category/update/category-update.component";
 import {CategoryCreateComponent} from "./category/create/category-create.component";
+import {CouponAdminComponent} from "./coupon/coupon-admin.component";
+import {CouponUpdateComponent} from "./coupon/coupon-update/coupon-update.component";
+import {CouponCreateComponent} from "./coupon/coupon-create/coupon-create.component";
 
 export const adminRoutes: Routes = [
   {
@@ -45,6 +48,18 @@ export const adminRoutes: Routes = [
       {
         path: 'categories/create',
         component: CategoryCreateComponent
+      },
+      {
+        path: 'coupons',
+        component: CouponAdminComponent
+      },
+      {
+        path: 'coupons/update/:id',
+        component: CouponUpdateComponent
+      },
+      {
+        path: 'coupons/create',
+        component: CouponCreateComponent
       },
     ]
   }

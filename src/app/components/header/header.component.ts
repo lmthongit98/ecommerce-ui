@@ -62,6 +62,7 @@ export class HeaderComponent implements OnInit{
 
 
   setActiveNavItem(index: number) {
+    debugger
     this.activeNavItem = index;
     //alert(this.activeNavItem);
   }
