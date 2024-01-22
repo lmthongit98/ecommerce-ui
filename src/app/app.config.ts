@@ -24,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideNgxStripe(environment.stripe.publicKey),
     provideAnimations(),
     provideToastr({
-      timeOut: 10000,
+      timeOut: 1500,
       positionClass:  'toast-top-right',
       preventDuplicates: true,
     }),

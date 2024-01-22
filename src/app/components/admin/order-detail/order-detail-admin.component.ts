@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {OrderDTO} from "../../../dtos/order/order.dto";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-order-detail-admin',
@@ -38,6 +39,9 @@ export class OrderDetailAdminComponent {
 
   };
   private orderService = inject(OrderService);
+  private toastr = inject(ToastrService);
+
+
   constructor(
     private route: ActivatedRoute,
     private router: Router
@@ -98,24 +102,16 @@ export class OrderDetailAdminComponent {
   }
 
   saveOrder(): void {
-    debugger
     this.orderService
       .updateOrder(this.orderId, new OrderDTO(this.orderResponse))
       .subscribe({
         next: (response: Object) => {
-          debugger
-          // Handle the successful update
-          //console.log('Order updated successfully:', response);
-          // Navigate back to the previous page
+          this.toastr.success("Updated order successfully");
           //this.router.navigate(['/admin/orders']);
-          this.router.navigate(['../'], { relativeTo: this.route });
-        },
-        complete: () => {
-          debugger;
+          // this.router.navigate(['../'], { relativeTo: this.route });
         },
         error: (error: any) => {
-          // Handle the error
-          debugger
+          this.toastr.error(error.error.description, "Update Order Error")
           console.error('Error updating order:', error);
           this.router.navigate(['../'], { relativeTo: this.route });
         }
