@@ -268,12 +268,16 @@ export class OrderComponent implements OnInit {
       }
       this.couponService.calculateCouponValue(couponApplyDto)
         .subscribe({
-          next: ({discountAmount}) => {
-            debugger
-            this.couponDiscount = this.totalAmount - discountAmount;
-            this.totalAmount = discountAmount;
-            this.couponApplied = true;
-            this.couponError = '';
+          next: (res) => {
+            if (res.success) {
+              const discountAmount = res.discountAmount
+              this.couponDiscount = this.totalAmount - discountAmount;
+              this.totalAmount = discountAmount;
+              this.couponApplied = true;
+              this.couponError = '';
+            } else {
+              console.log(res.message)
+            }
           }, error: (err) => {
             this.couponError = err.error.description;
             console.log(err)

@@ -30,11 +30,7 @@ export class CategoryAdminComponent {
   getCategories(page: number, limit: number) {
     this.categoryService.getCategories(page, limit).subscribe({
       next: (categories: Category[]) => {
-        debugger;
         this.categories = categories;
-      },
-      complete: () => {
-        debugger;
       },
       error: (error: any) => {
         console.error('Error fetching categories:', error);

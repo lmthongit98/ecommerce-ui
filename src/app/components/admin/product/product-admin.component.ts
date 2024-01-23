@@ -57,19 +57,13 @@ export class ProductAdminComponent implements OnInit {
   }
 
   getProducts(keyword: string, selectedCategoryId: number, page: number, limit: number) {
-    debugger
     this.productService.getProducts(keyword, selectedCategoryId, page, limit).subscribe({
       next: (response: any) => {
-        debugger
         this.products = response.content;
         this.totalPages = response.pageSize;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
-      complete: () => {
-        debugger;
-      },
       error: (error: any) => {
-        debugger;
         console.error('Error fetching products:', error);
       }
     });

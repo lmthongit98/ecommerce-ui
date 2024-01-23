@@ -4,24 +4,19 @@
       <h4 class="mb-0">Create New Coupon</h4>
     </div>
     <div class="card-body">
-      <form>
+      <form [formGroup]="couponForm" (ngSubmit)="createCoupon()">
         <!-- Coupon Code -->
         <div class="mb-3">
           <label for="couponCode" class="form-label">Coupon Code</label>
-          <input type="text" class="form-control shadow-sm" id="couponCode" placeholder="Enter coupon code">
-        </div>
-
-        <!-- Description -->
-        <div class="mb-3">
-          <label for="couponDescription" class="form-label">Description</label>
-          <textarea class="form-control shadow-sm" id="couponDescription" rows="3"
-                    placeholder="Enter coupon description"></textarea>
+          <input formControlName="couponCode" type="text" class="form-control shadow-sm" id="couponCode"
+                 placeholder="Enter coupon code">
         </div>
 
         <!-- Discount Amount -->
         <div class="mb-3">
           <label for="couponAmount" class="form-label">Discount Amount</label>
-          <input type="number" class="form-control shadow-sm" id="couponAmount" placeholder="Enter discount amount">
+          <input formControlName="discountAmount" type="number" class="form-control shadow-sm" id="couponAmount"
+                 placeholder="Enter discount amount">
         </div>
 
         <!-- Expiry Date -->
@@ -29,7 +24,7 @@
           <label for="couponExpiry" class="form-label">Expiry Date</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-            <input type="date" class="form-control shadow-sm" id="couponExpiry">
+            <input formControlName="expiryDate" type="date" class="form-control shadow-sm" id="couponExpiry">
           </div>
         </div>
 
@@ -50,7 +45,6 @@
               <table class="table">
                 <thead>
                 <tr>
-                  <th scope="col">ID</th>
                   <th scope="col">Attribute Type</th>
                   <th scope="col">Attribute</th>
                   <th scope="col">Operator</th>
@@ -59,65 +53,38 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>
-                    <select class="form-select">
-                      <option selected>NUMBER</option>
-                      <!-- Other options -->
-                    </select>
-                  </td>
-                  <td>
-                    <select class="form-select">
-                      <option selected>Total Amount</option>
-                      <!-- Other options -->
-                    </select>
-                  </td>
-                  <td>
-                    <select class="form-select">
-                      <option selected>GREATER_THAN</option>
-                      <!-- Other options -->
-                    </select>
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>
-                    <select class="form-select">
-                      <option selected>DATE</option>
-                      <!-- Other options -->
-                    </select>
-                  </td>
-                  <td>
-                    <select class="form-select">
-                      <option selected>Purchase Date</option>
-                      <!-- Other options -->
-                    </select>
-                  </td>
-                  <td>
-                    <select class="form-select">
-                      <option selected>BETWEEN</option>
-                      <!-- Other options -->
-                    </select>
-                  </td>
-                  <td>
-                    <input type="text" class="form-control">
-                  </td>
-                  <td>
-                    <button class="btn btn-danger">
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
-                  </td>
-                </tr>
-                <!-- Other rows -->
+                  @for (condition of coupon.conditions; track idx; let idx = $index) {
+                    <tr>
+                      <td>
+                        <select class="form-select">
+                          <option selected>DATE</option>
+                          <!-- Other options -->
+                        </select>
+                      </td>
+                      <td>
+                        <select class="form-select">
+                          <option selected>Purchase Date</option>
+                          <!-- Other options -->
+                        </select>
+                      </td>
+                      <td>
+                        <select class="form-select">
+                          <option selected>BETWEEN</option>
+                          <!-- Other options -->
+                        </select>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control">
+                      </td>
+                      <td>
+                        <button (click)="removeCondition(idx)" class="btn btn-danger">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  }
                 </tbody>
-                <button type="button" class="btn btn-primary mt-3">
+                <button (click)="addCondition()" type="button" class="btn btn-primary mt-3">
                   <i class="fa fa-plus-circle"></i> Add
                 </button>
               </table>

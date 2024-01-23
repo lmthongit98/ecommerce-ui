@@ -33,7 +33,6 @@ export class OrderAdminComponent {
   }
 
   ngOnInit(): void {
-    debugger
     this.currentPage = Number(this.localStorage?.getItem('currentOrderAdminPage')) || 0;
     this.getAllOrders(this.keyword, this.currentPage, this.itemsPerPage);
   }
@@ -42,31 +41,23 @@ export class OrderAdminComponent {
     this.currentPage = 0;
     this.itemsPerPage = 12;
     //Mediocre Iron Wallet
-    debugger
     this.getAllOrders(this.keyword.trim(), this.currentPage, this.itemsPerPage);
   }
 
   getAllOrders(keyword: string, page: number, limit: number) {
-    debugger
     this.orderService.getAllOrders(keyword, page, limit).subscribe({
       next: (response: any) => {
-        debugger
         this.orders = response.content;
         this.totalPages = response.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
-      complete: () => {
-        debugger;
-      },
       error: (error: any) => {
-        debugger;
         console.error('Error fetching products:', error);
       }
     });
   }
 
   onPageChange(page: number) {
-    debugger;
     this.currentPage = page < 0 ? 0 : page;
     this.localStorage?.setItem('currentOrderAdminPage', String(this.currentPage));
     this.getAllOrders(this.keyword, this.currentPage, this.itemsPerPage);

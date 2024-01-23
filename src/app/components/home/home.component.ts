@@ -49,7 +49,6 @@ export class HomeComponent {
   }
 
   ngOnInit() {
-    debugger
     this.currentPage = Number(this.localStorage?.getItem('currentProductPage')) || 0;
     this.getProducts(this.keyword, this.selectedCategoryId, this.currentPage, this.itemsPerPage);
     this.getCategories(0, 100);
@@ -58,11 +57,7 @@ export class HomeComponent {
   getCategories(page: number, limit: number) {
     this.categoryService.getCategories(page, limit).subscribe({
       next: (categories: Category[]) => {
-        debugger;
         this.categories = categories;
-      },
-      complete: () => {
-        debugger;
       },
       error: (error: any) => {
         console.error('Error fetching categories:', error);
