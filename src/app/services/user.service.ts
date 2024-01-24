@@ -48,7 +48,6 @@ export class UserService {
 
   saveUserResponseToLocalStorage(userResponse?: UserResponse) {
     try {
-      debugger
       if (userResponse == null || !userResponse) {
         return;
       }

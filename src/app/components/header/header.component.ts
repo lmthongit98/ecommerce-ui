@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { UserResponse } from '../../responses/user/user.response';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -48,9 +48,7 @@ export class HeaderComponent implements OnInit{
   }
 
   handleItemClick(index: number): void {
-    //alert(`Clicked on "${index}"`);
     if(index === 0) {
-      debugger
       this.router.navigate(['/user-profile']);
     } else if (index === 2) {
       this.userService.removeUserFromLocalStorage();
@@ -62,8 +60,6 @@ export class HeaderComponent implements OnInit{
 
 
   setActiveNavItem(index: number) {
-    debugger
     this.activeNavItem = index;
-    //alert(this.activeNavItem);
   }
 }

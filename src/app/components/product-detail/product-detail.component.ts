@@ -40,7 +40,6 @@ export class DetailProductComponent implements OnInit {
   ngOnInit() {
     // Lấy productId từ URL
     const idParam = this.activatedRoute.snapshot.paramMap.get('id');
-    debugger
     //this.cartService.clearCart();
     //const idParam = 9 //fake tạm 1 giá trị
     if (idParam !== null) {
@@ -53,11 +52,7 @@ export class DetailProductComponent implements OnInit {
           // Bắt đầu với ảnh đầu tiên
           this.showImage(0);
         },
-        complete: () => {
-          debugger;
-        },
         error: (error: any) => {
-          debugger;
           console.error('Error fetching detail:', error);
         }
       });
@@ -67,7 +62,6 @@ export class DetailProductComponent implements OnInit {
   }
 
   showImage(index: number): void {
-    debugger
     if (this.product && this.product.productImages &&
       this.product.productImages.length > 0) {
       // Đảm bảo index nằm trong khoảng hợp lệ
