@@ -82,17 +82,11 @@ export class OrderAdminComponent {
     const confirmation = window
       .confirm('Are you sure you want to delete this order?');
     if (confirmation) {
-      debugger
       this.orderService.deleteOrder(id).subscribe({
         next: (response: any) => {
-          debugger
           location.reload();
         },
-        complete: () => {
-          debugger;
-        },
         error: (error: any) => {
-          debugger;
           console.error('Error fetching products:', error);
         }
       });
@@ -100,7 +94,6 @@ export class OrderAdminComponent {
   }
 
   viewDetails(order: OrderResponse) {
-    debugger
     this.router.navigate(['/admin/orders', order.id]);
   }
 }

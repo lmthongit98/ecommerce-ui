@@ -1,5 +1,4 @@
-export interface GenericResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
+export interface ApiErrorResponse{
+  errorCode: number;
+  description: string;
 }

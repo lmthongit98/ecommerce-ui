@@ -3,11 +3,8 @@ import {FormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
 import {CouponService} from "../../../services/coupon.service";
 import {CouponResponseDto} from "../../../responses/coupon/coupon.response";
-import {GenericResponse} from "../../../responses/generic.response";
 import {CommonModule} from "@angular/common";
-import {ProductService} from "../../../services/product.service";
-import {CartService} from "../../../services/cart.service";
-import {of} from "rxjs";
+import {ApiErrorResponse} from "../../../responses/generic.response";
 
 @Component({
   selector: 'app-coupon',
@@ -36,8 +33,8 @@ export class CouponAdminComponent implements OnInit {
       next: (response) => {
         this.coupons = response.content;
       },
-      error: (error: any) => {
-        console.error('Error fetching products:', error);
+      error: (error: ApiErrorResponse) => {
+        console.error('Error fetching products: ', error.description);
       }
     });
   }
