@@ -57,15 +57,8 @@ export class AdminComponent implements OnInit {
       this.router.navigate(['/admin/products']);
     } else if (componentName === 'products') {
       this.router.navigate(['/admin/coupons']);
+    } else if (componentName === 'roles') {
+      this.router.navigate(['/admin/roles']);
     }
   }
 }
-
-
-/**
- npm install --save font-awesome
- angular.json:
- "styles": [
- "node_modules/font-awesome/css/font-awesome.min.css"
- ],
- */

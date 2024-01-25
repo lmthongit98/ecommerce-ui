@@ -1,0 +1,33 @@
+<div class="container">
+  <h1>Category Admin</h1>
+  <div class="row">
+    <div class="col-md-8 ">
+      <button class="btn btn-success">Add role</button>
+    </div>
+  </div>
+  <table class="table">
+    <thead class="table-light">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (role of roles; track $index) {
+        <tr>
+          <td>{{role.id}}</td>
+          <td>{{role.name}}</td>
+          <td>{{role.active ? 'ACTIVE' : 'IN ACTIVE'}}</td>
+          <td>
+            <div style="display: flex; gap: 10px;">
+              <button (click)="updateRole(role.id)" class="btn btn-primary">Update</button>
+              <button class="btn btn-danger">Delete</button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
