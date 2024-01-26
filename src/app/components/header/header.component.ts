@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { UserService } from '../../services/user.service';
 
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import {StorageService} from "../../services/storage.service";
 import {CartService} from "../../services/cart.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -20,11 +21,12 @@ import {CartService} from "../../services/cart.service";
     RouterModule
   ]
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit, OnDestroy {
   userResponse?:UserResponse | null;
   isPopoverOpen = false;
   activeNavItem: number = 0;
   itemCount = 0;
+  itemCountSub!: Subscription;
 
 
   constructor(
@@ -37,7 +39,7 @@ export class HeaderComponent implements OnInit{
   }
   ngOnInit() {
     this.userResponse = this.userService.getUserResponseFromLocalStorage();
-    this.cartService.itemCount$.subscribe(count => {
+    this.itemCountSub = this.cartService.itemCount$.subscribe(count => {
       this.itemCount = count;
     });
   }
@@ -61,5 +63,9 @@ export class HeaderComponent implements OnInit{
 
   setActiveNavItem(index: number) {
     this.activeNavItem = index;
+  }
+
+  ngOnDestroy(): void {
+    this.itemCountSub.unsubscribe();
   }
 }
