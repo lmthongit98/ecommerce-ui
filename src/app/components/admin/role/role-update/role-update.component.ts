@@ -5,6 +5,8 @@ import {NgbCollapse} from "@ng-bootstrap/ng-bootstrap";
 import {RoleResponse} from "../../../../responses/role/role.response.dto";
 import {RoleService} from "../../../../services/role.service";
 import {ActivatedRoute} from "@angular/router";
+import {RoleDto} from "../../../../dtos/role/role.dto";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-role-update',
@@ -32,7 +34,9 @@ export class RoleUpdateComponent implements OnInit {
 
   roleService = inject(RoleService);
   route = inject(ActivatedRoute);
+  toastr = inject(ToastrService);
 
+  roleUpdateDto!: RoleDto
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.roleId = Number(params.get('id'));
@@ -60,6 +64,21 @@ export class RoleUpdateComponent implements OnInit {
   }
 
   save() {
-    console.log(this.role)
+    this.roleUpdateDto = {
+      name: this.role.name,
+      description: this.role.description,
+      active: this.role.active,
+      permissions:  Object.values(this.role.groupedPermissions).flat()
+    }
+    this.roleService.updateRoleById(this.roleId, this.roleUpdateDto).subscribe({
+      next: (response) => {
+        // this.role = response;
+        // this.modules = Array.from(Object.keys(response.groupedPermissions))
+        this.toastr.success("Updated role successfully!");
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    })
   }
 }
