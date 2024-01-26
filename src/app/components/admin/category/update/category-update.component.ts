@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
-import {Category} from "../../../../models/category";
+import {Category} from "../../../../models/category/category";
 import {CategoryService} from "../../../../services/category.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UpdateCategoryDTO} from "../../../../dtos/category/update.category.dto";

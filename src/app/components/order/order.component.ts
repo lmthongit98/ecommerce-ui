@@ -1,5 +1,5 @@
 import {Component, OnInit, signal, ViewChild} from '@angular/core';
-import {Product} from '../../models/product';
+import {Product} from '../../models/product/product';
 import {CartService} from '../../services/cart.service';
 import {ProductService} from '../../services/product.service';
 import {OrderService} from '../../services/order.service';
@@ -18,7 +18,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {inject} from '@angular/core';
 import {CouponService} from '../../services/coupon.service';
 import {UserService} from "../../services/user.service";
-import {Order} from "../../models/order";
+import {Order} from "../../models/order/order";
 import {
   StripeCardCvcComponent,
   StripeCardExpiryComponent,

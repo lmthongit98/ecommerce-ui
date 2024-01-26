@@ -1,6 +1,6 @@
-import {ConditionDto} from "../dtos/coupon/coupon.insert.dto";
+import {ConditionDto} from "../../dtos/coupon/coupon.insert.dto";
 
-export interface CouponModel {
+export interface Coupon {
   couponCode: string;
   discountAmount: number;
   expiryDate: Date;

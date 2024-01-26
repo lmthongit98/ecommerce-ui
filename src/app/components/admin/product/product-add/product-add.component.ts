@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Category} from "../../../../models/category";
+import {Category} from "../../../../models/category/category";
 import {InsertProductDTO} from "../../../../dtos/product/insert.product.dto";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CategoryService} from "../../../../services/category.service";

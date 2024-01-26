@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
-import {Product} from "../../../../models/product";
-import {Category} from "../../../../models/category";
+import {Product} from "../../../../models/product/product";
+import {Category} from "../../../../models/category/category";
 import {ProductService} from "../../../../services/product.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CategoryService} from "../../../../services/category.service";
 import {UpdateProductDTO} from "../../../../dtos/product/update.product.dto";
-import {ProductImage} from "../../../../models/product.image";
+import {ProductImage} from "../../../../models/product/product.image";
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 
