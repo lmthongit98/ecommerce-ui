@@ -35,4 +35,10 @@ export class RoleAdminComponent implements OnInit {
   updateRole(id: number) {
     this.router.navigate([`/admin/roles/update/${id}`]);
   }
+
+  createRole() {
+    this.router.navigate(['/admin/roles/create']);
+  }
+
+
 }

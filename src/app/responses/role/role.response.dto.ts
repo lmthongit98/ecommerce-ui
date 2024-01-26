@@ -7,7 +7,7 @@ export interface Permission {
   enabled: boolean;
 }
 
-interface GroupedPermissions {
+export interface GroupedPermissions {
   [key: string]: Permission[];
 }
 

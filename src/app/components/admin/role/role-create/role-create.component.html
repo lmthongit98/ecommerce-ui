@@ -1,0 +1,73 @@
+<!-- app.component.html -->
+<div class="container my-3">
+  <h2>Tạo mới Role</h2>
+  <!--  <form>-->
+  <div class="mb-3 row">
+    <label for="roleName" class="col-sm-2 col-form-label">Role name</label>
+    <div class="col-sm-6">
+      <input type="text" [(ngModel)]="role.name" class="form-control" id="roleName" required>
+    </div>
+    <div class="col-sm-4 d-flex align-items-center justify-content-end">
+      <div class="form-check form-switch">
+        <input [(ngModel)]="role.active" class="form-check-input" type="checkbox" id="roleStatus" checked>
+        <label class="form-check-label" for="roleStatus">ACTIVE</label>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="mb-3 row">
+    <label for="roleDescription" class="col-sm-2 col-form-label">Description</label>
+    <div class="col-sm-10">
+      <textarea [(ngModel)]="role.description" class="form-control" id="roleDescription" required></textarea>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Permissions</label>
+    <div class="mb-3 accordion" id="permissionsAccordion">
+      <ng-container *ngFor="let module of modules">
+        <div class="accordion-item">
+          <h2 class="accordion-header" [id]="'header' + module">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    [attr.data-bs-target]="'#collapse' + module" aria-expanded="false"
+                    [attr.aria-controls]="'collapse' + module">
+              {{ module }}
+            </button>
+          </h2>
+          <div [id]="'collapse' + module" class="accordion-collapse collapse"
+               [attr.aria-labelledby]="'header' + module"
+               data-bs-parent="#permissionsAccordion">
+            <div class="accordion-body">
+              <div class="row">
+                <div class="col-6" *ngFor="let permission of groupedPermissions[module]; let i = index">
+                  <div class="card mt-2 p-2">
+                    <div class="d-flex align-items-center mb-3">
+                      <div class="form-check form-switch me-2">
+                        <input class="form-check-input" type="checkbox" [id]="'checkbox' + module + i"
+                               [(ngModel)]="permission.enabled" (change)="togglePermission(permission)">
+                        <label class="form-check-label" [for]="'checkbox' + module + i"></label>
+                      </div>
+                      <div>
+                        <div><strong>{{ permission.name }}</strong></div>
+                        <div>
+                          <span class="badge bg-primary">{{ permission.method }}</span>
+                          <small class="text-muted mx-2">{{ permission.path }}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="text-start">
+    <button (click)="save()" type="submit" class="btn btn-primary">Lưu</button>
+  </div>
+  <!--  </form>-->
+</div>

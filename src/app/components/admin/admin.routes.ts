@@ -13,6 +13,7 @@ import {CouponUpdateComponent} from "./coupon/coupon-update/coupon-update.compon
 import {CouponCreateComponent} from "./coupon/coupon-create/coupon-create.component";
 import {RoleAdminComponent} from "./role/role-admin.component";
 import {RoleUpdateComponent} from "./role/role-update/role-update.component";
+import {RoleCreateComponent} from "./role/role-create/role-create.component";
 
 export const adminRoutes: Routes = [
   {
@@ -70,6 +71,10 @@ export const adminRoutes: Routes = [
       {
         path: 'roles/update/:id',
         component: RoleUpdateComponent
+      },
+      {
+        path: 'roles/create',
+        component: RoleCreateComponent
       },
     ]
   }

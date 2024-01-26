@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {RoleResponse} from "../responses/role/role.response.dto";
+import {GroupedPermissions, RoleResponse} from "../responses/role/role.response.dto";
 import {RoleDto} from "../dtos/role/role.dto";
 
 @Injectable({
@@ -24,6 +24,14 @@ export class RoleService {
 
   updateRoleById(id: number, roleUpdate: RoleDto): Observable<RoleResponse> {
     return this.http.put<RoleResponse>(`${this.apiGetRoles}/${id}`, roleUpdate);
+  }
+
+  createRole(roleUpdate: RoleDto): Observable<RoleResponse> {
+    return this.http.post<RoleResponse>(this.apiGetRoles, roleUpdate);
+  }
+
+  getGroupedPermission(): Observable<GroupedPermissions> {
+    return this.http.get<GroupedPermissions>(`${this.apiGetRoles}/permissions`);
   }
 
 }
