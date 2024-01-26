@@ -3,15 +3,15 @@
   <!--Đoạn này có 1 ô searchbox bên trái, 1 combobox bên phải  -->
   <div class="row mb-3">
     <div class="col-md-8">
-      <input type="text" class="form-control search-input" placeholder="Tìm sản phẩm" [(ngModel)]="keyword">
+      <input type="text" class="form-control search-input" placeholder="Search products" [(ngModel)]="keyword">
     </div>
     <div class="col-md-4">
-      <button class="btn btn-primary" (click)="searchProducts()">Tìm kiếm</button>
+      <button class="btn btn-primary" (click)="searchProducts()">Search</button>
     </div>
   </div>
   <div class="row">
     <div class="col-md-8 ">
-      <button class="btn btn-success" (click)="insertProduct()">Thêm sản phẩm mới</button>
+      <button class="btn btn-success mb-3" (click)="insertProduct()">Add Product</button>
     </div>
   </div>
 

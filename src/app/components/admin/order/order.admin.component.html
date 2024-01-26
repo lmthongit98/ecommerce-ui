@@ -1,15 +1,13 @@
-
 <div class="container-fluid">
-  <h1>Orders Admin Page</h1>
-  <!--Đoạn này có 1 ô searchbox bên trái, 1 combobox bên phải  -->
+  <h1>Orders Admin</h1>
   <div class="row mb-3">
     <div class="col-md-8">
       <input type="text"
-             class="form-control search-input" placeholder="Tìm đơn hàng"
+             class="form-control search-input" placeholder="Search orders"
              [(ngModel)]="keyword">
     </div>
     <div class="col-md-4">
-      <button class="btn btn-primary" (click)="searchOrders()">Tìm kiếm</button>
+      <button class="btn btn-primary" (click)="searchOrders()">Search</button>
     </div>
   </div>
   <table class="table">
@@ -36,10 +34,11 @@
     </tr>
     </thead>
     <tbody>
-      @for(order of orders; track order.id){
+      @for (order of orders;track order.id) {
         <tr>
           <td>
-            {{ order.id }}</td>
+            {{ order.id }}
+          </td>
           <td>{{ order.user_id }}</td>
           <td>{{ order.fullname }}</td>
           <td>{{ order.email }}</td>
@@ -65,7 +64,8 @@
               </button>
               <button class="btn btn-danger"
                       (click)="deleteOrder(order.id)"
-              >Delete</button>
+              >Delete
+              </button>
             </div>
           </td>
         </tr>
@@ -75,17 +75,17 @@
   <div class="d-flex justify-content-center">
     <nav aria-label="Page navigation">
       <ul class="pagination">
-        @if(currentPage > 1) {
-          <li class="page-item" >
+        @if (currentPage > 1) {
+          <li class="page-item">
             <a class="page-link"
                (click)="onPageChange(1)">First</a>
           </li>
-          <li class="page-item" >
+          <li class="page-item">
             <a class="page-link"
                (click)="onPageChange(currentPage - 1)">Previous</a>
           </li>
         }
-        @for(page of visiblePages; track page) {
+        @for (page of visiblePages;track page) {
           <ng-container>
             <li class="page-item" [ngClass]="{'active': page === currentPage}">
               <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
@@ -93,7 +93,7 @@
           </ng-container>
         }
 
-        @if(currentPage < totalPages) {
+        @if (currentPage < totalPages) {
           <li class="page-item">
             <a class="page-link" (click)="onPageChange(currentPage + 1)">Next</a>
           </li>
