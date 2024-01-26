@@ -2,6 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {RoleResponse} from "../../../responses/role/role.response.dto";
 import {RoleService} from "../../../services/role.service";
 import {Router} from "@angular/router";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-role',
@@ -16,6 +17,8 @@ export class RoleAdminComponent implements OnInit {
 
   roleService = inject(RoleService);
   router = inject(Router);
+  toastr = inject(ToastrService);
+
 
   ngOnInit(): void {
     this.getRoles();
@@ -41,4 +44,20 @@ export class RoleAdminComponent implements OnInit {
   }
 
 
+  deleteRole(id: number) {
+    const confirmation = window
+      .confirm('Are you sure you want to delete this role?');
+    if (!confirmation) {
+      return;
+    }
+    this.roleService.deleteRoleById(id).subscribe({
+      next: (response) => {
+        this.getRoles();
+        this.toastr.success("Deleted role successfully!");
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    });
+  }
 }

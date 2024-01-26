@@ -34,4 +34,8 @@ export class RoleService {
     return this.http.get<GroupedPermissions>(`${this.apiGetRoles}/permissions`);
   }
 
+  deleteRoleById(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiGetRoles}/${id}`);
+  }
+
 }
