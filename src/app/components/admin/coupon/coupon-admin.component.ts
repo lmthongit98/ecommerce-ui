@@ -5,6 +5,7 @@ import {CouponService} from "../../../services/coupon.service";
 import {CouponResponseDto} from "../../../responses/coupon/coupon.response";
 import {CommonModule} from "@angular/common";
 import {ApiErrorResponse} from "../../../responses/generic.response";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-coupon',
@@ -18,9 +19,11 @@ import {ApiErrorResponse} from "../../../responses/generic.response";
 })
 export class CouponAdminComponent implements OnInit {
 
-  private router = inject(Router);
+  router = inject(Router);
 
-  private couponService = inject(CouponService);
+  couponService = inject(CouponService);
+  toastr = inject(ToastrService);
+
 
   coupons: CouponResponseDto[] = [];
 
@@ -49,6 +52,19 @@ export class CouponAdminComponent implements OnInit {
   }
 
   deleteCoupon(id: number) {
-
+    const confirmation = window.confirm('Are you sure you want to delete this role?');
+    if (!confirmation) {
+      return;
+    }
+    this.couponService.deleteCouponById(id).subscribe({
+      next: (response) => {
+        this.getCoupons();
+        this.toastr.success("Deleted coupon successfully!");
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    });
   }
+
 }

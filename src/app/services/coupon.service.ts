@@ -54,4 +54,8 @@ export class CouponService {
     return this.http.get<any>(url);
   }
 
+  deleteCouponById(id: number) {
+    const url = `${this.apiBaseUrl}/coupons/${id}`;
+    return this.http.delete<CouponResponseDto>(url);
+  }
 }
