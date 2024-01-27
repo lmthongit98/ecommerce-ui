@@ -2,9 +2,9 @@ export interface CouponResponseDto {
   id: number
   code: string;
   discountPercentage: number;
-  expiryDate: Date;
+  expiryDate: string;
   active: boolean;
-  couponConditions: CouponConditionDto[];
+  conditions: CouponConditionDto[];
 }
 
 interface CouponConditionDto {

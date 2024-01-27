@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {CouponApplyDto} from "../dtos/coupon/coupon.apply.dto";
 import {AttributeDto} from "../responses/coupon/attribute.dto";
 import {CouponDto} from "../dtos/coupon/coupon.insert.dto";
+import {CouponResponseDto} from "../responses/coupon/coupon.response";
 
 
 @Injectable({
@@ -21,6 +22,17 @@ export class CouponService {
     const url = `${this.apiBaseUrl}/coupons`;
     return this.http.post<any>(url, couponDto);
   }
+
+  updateCoupon(id: number, couponDto: CouponDto): Observable<any> {
+    const url = `${this.apiBaseUrl}/coupons/${id}`;
+    return this.http.put<any>(url, couponDto);
+  }
+
+  getCouponDetails(id: number): Observable<CouponResponseDto> {
+    const url = `${this.apiBaseUrl}/coupons/${id}`;
+    return this.http.get<CouponResponseDto>(url);
+  }
+
 
   calculateCouponValue(couponApplyDto: CouponApplyDto): Observable<any> {
     const url = `${this.apiBaseUrl}/coupons/apply`;
